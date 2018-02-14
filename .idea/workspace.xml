@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="122711c7-57a2-4fcc-b666-b292a70c6f4e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleEitherTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleEitherTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleFutureTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleFutureTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleListTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleListTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleMatchingTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleMatchingTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleOptionTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleOptionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SamplePromiseTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SamplePromiseTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleTupleTest.java" afterPath="$PROJECT_DIR$/src/test/java/sample/vavr/SampleTupleTest.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -217,7 +208,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1518579587550</updated>
-      <workItem from="1518579589714" duration="103000" />
+      <workItem from="1518579589714" duration="120000" />
     </task>
     <task id="LOCAL-00001" summary="Use junit 4 for unit test.">
       <created>1518579667569</created>
@@ -226,11 +217,18 @@
       <option name="project" value="LOCAL" />
       <updated>1518579667569</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Use junit 4 for unit test.">
+      <created>1518579705641</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1518579705642</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103000" />
+    <option name="totallyTimeSpent" value="120000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="0" width="1920" height="1080" extended-state="0" />
