@@ -1,12 +1,8 @@
 package sample.vavr;
 
 import lombok.val;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
-import static io.vavr.Patterns.$Success;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SampleFutureTest {

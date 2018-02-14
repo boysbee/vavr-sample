@@ -3,7 +3,7 @@ package sample.vavr;
 import io.vavr.API;
 import io.vavr.control.Option;
 import lombok.val;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Optional;
 
@@ -54,6 +54,18 @@ public class SampleOptionTest {
         String f = b.orElseGet(() -> "Other");
         System.out.println(f);
 
+    }
+
+    @Test
+    public void testFlatMap() {
+        val introduce = Option.some("My name is");
+        val name = Option.some("Notto");
+        val job = Option.some("My job is Programmer");
+
+       val b =  introduce
+               .flatMap(a -> name.flatMap(n -> job.flatMap(j -> {
+           return Option.some(a + " " + n + " " + j);
+       })).peek(System.out::println));
     }
 
 
