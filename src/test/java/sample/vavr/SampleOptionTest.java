@@ -1,6 +1,7 @@
 package sample.vavr;
 
 import io.vavr.API;
+import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import lombok.val;
 import org.junit.Test;
@@ -8,6 +9,8 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static io.vavr.API.*;
+import static io.vavr.Patterns.$None;
+import static io.vavr.Patterns.$Some;
 import static io.vavr.Predicates.instanceOf;
 import static io.vavr.Predicates.is;
 import static io.vavr.control.Option.none;
@@ -56,16 +59,37 @@ public class SampleOptionTest {
 
     }
 
+
     @Test
-    public void testFlatMap() {
+    public void ofNull() {
+        val a = Option.of(null);
+        assertThat(a.isDefined()).isFalse();
+        val r = Match(a).of(
+                Case($Some($()), "Some val"),
+                Case($None(), "None")
+
+        );
+        assertThat(r).isEqualTo("None");
+    }
+
+    @Test
+    public void someNull() {
+        val a = Option.some(null);
+        val r = Match(a).of(
+                Case($Some($()), "Some val"),
+                Case($None(), "None")
+
+        );
+        assertThat(r).isEqualTo("Some val");
+    }
+
+    @Test
+    public void testForComprehension() {
         val introduce = Option.some("My name is");
         val name = Option.some("Notto");
         val job = Option.some("My job is Programmer");
-
-       val b =  introduce
-               .flatMap(a -> name.flatMap(n -> job.flatMap(j -> {
-           return Option.some(a + " " + n + " " + j);
-       })).peek(System.out::println));
+        val r = introduce.flatMap(a -> name.flatMap(b -> job.flatMap(c -> Option.of(a + " " + b + " " + c)))).get();
+        assertThat(r).isEqualTo("My name is Notto My job is Programmer");
     }
 
 
