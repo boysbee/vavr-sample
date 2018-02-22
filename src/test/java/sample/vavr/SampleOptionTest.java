@@ -1,7 +1,5 @@
 package sample.vavr;
 
-import io.vavr.API;
-import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import lombok.val;
 import org.junit.Test;
@@ -11,8 +9,6 @@ import java.util.Optional;
 import static io.vavr.API.*;
 import static io.vavr.Patterns.$None;
 import static io.vavr.Patterns.$Some;
-import static io.vavr.Predicates.instanceOf;
-import static io.vavr.Predicates.is;
 import static io.vavr.control.Option.none;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,8 +65,22 @@ public class SampleOptionTest {
                 Case($None(), "None")
 
         );
+        assertThat(a.isEmpty()).isTrue();
         assertThat(r).isEqualTo("None");
     }
+
+    @Test
+    public void ofNullIsEmpty() {
+        val a = Option.of(null);
+        assertThat(a.isEmpty()).isTrue();
+    }
+
+    @Test
+    public void ofNullIsNotDefined() {
+        val a = Option.of(null);
+        assertThat(a.isDefined()).isFalse();
+    }
+
 
     @Test
     public void someNull() {
