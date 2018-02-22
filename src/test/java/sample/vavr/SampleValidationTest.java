@@ -35,4 +35,30 @@ public class SampleValidationTest {
         assertThat(v.get()).isEqualTo("Name is Ok and Address is Ok");
     }
 
+    @Test
+    public void testCombine2WithOneResponseInvalid() {
+        String name = "Test";
+        String address = "Wrong";
+        Validation v = Validation.combine(
+                SampleValidation.validateName(name),
+                SampleValidation.validateAddress(address)
+        ).ap((n, a) -> String.format("Name is %s and Address is %s", n, a));
+
+        assertThat(v.isInvalid()).isTrue();
+    }
+
+    @Test
+    public void testCombine3WithValid() {
+
+        Validation v = Validation.combine(
+                Validation.valid(true),
+                Validation.valid(true),
+                Validation.valid(true)
+        ).ap((a, b, c) -> a && b && c);
+
+        assertThat(v.isValid()).isTrue();
+    }
+
+
+
 }
