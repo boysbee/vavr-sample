@@ -16,8 +16,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import sample.BackendService;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.function.Supplier;
 
+import static io.vavr.API.*;
+import static io.vavr.Predicates.instanceOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,7 +30,19 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 public class SampleTryTest {
     BackendService backendService;
-    private long sleptTime = 0L;
+
+    @Test
+    public void tryMapFailure() {
+        Try<String> a = Try.of(() -> {
+            throw new Exception("");
+        });
+        Match.Case<Exception, Exception> caseA = Case($(instanceOf(Exception.class)), new AException("Exception"));
+        Match.Case<IOException, Exception> caseB = Case($(instanceOf(IOException.class)), new BException("IO Exception"));
+        Match.Case<SocketException, Exception> caseC = Case($(instanceOf(SocketException.class)), new BException("SocketException"));
+        val b = a.mapFailure(caseA, caseB, caseC).getCause();
+        assertThat(b).isInstanceOf(IOException.class);
+        assertThat(b.getMessage()).isEqualTo("Exception");
+    }
 
     @Test
     public void tryPlus2Integer() {
@@ -77,6 +92,9 @@ public class SampleTryTest {
         assertThat(a).isEqualTo("Failure");
     }
 
+
+
+
     @Test
     public void tryWithCircuitBreakerAndRetry() {
 
@@ -123,4 +141,20 @@ public class SampleTryTest {
         assertThat(result.get()).isEqualTo("From recovery");
     }
 
+    static class AException extends Exception {
+
+        public AException(String exception) {
+            super(exception);
+        }
+    }
+    static class BException extends Exception {
+        public BException(String exception) {
+            super(exception);
+        }
+    }
+    static class CException extends Exception {
+        public CException(String exception) {
+            super(exception);
+        }
+    }
 }
