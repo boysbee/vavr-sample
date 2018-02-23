@@ -73,6 +73,7 @@ public class SampleOptionTest {
     public void ofNullIsEmpty() {
         val a = Option.of(null);
         assertThat(a.isEmpty()).isTrue();
+        assertThat(a.isDefined()).isTrue();
     }
 
     @Test
