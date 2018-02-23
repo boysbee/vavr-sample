@@ -40,7 +40,7 @@ public class SampleTryTest {
         Match.Case<IOException, Exception> caseB = Case($(instanceOf(IOException.class)), new BException("IO Exception"));
         Match.Case<SocketException, Exception> caseC = Case($(instanceOf(SocketException.class)), new BException("SocketException"));
         val b = a.mapFailure(caseA, caseB, caseC).getCause();
-        assertThat(b).isInstanceOf(IOException.class);
+        assertThat(b).isInstanceOf(AException.class);
         assertThat(b.getMessage()).isEqualTo("Exception");
     }
 
