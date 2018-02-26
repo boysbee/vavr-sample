@@ -3,8 +3,12 @@ package sample.vavr;
 import io.vavr.control.Option;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -95,7 +99,62 @@ public class OptionalVsOptionTest {
         Option<Object> b = Option.of(null).orElse(Option.some("other value"));
         assertThat(b.get()).isEqualTo("other value");
 
+        // transforming optional postal codes into addresses
+        // with JDK’s Optional:
+        List<Optional<String>> names = Arrays.asList(
+                Optional.of("a"),
+                Optional.of("b"),
+                Optional.of("c")
+        );
+        List<String> newList = names.stream()
+                .map(o -> findName(o))
+                .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
+                .collect(toList());
 
+        newList.forEach(System.out::println);
+
+        // or
+        List<String> newList2 = names.stream()
+                .map(o -> findName(o))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+
+        newList2.forEach(System.out::println);
+
+        io.vavr.collection.List<Option<String>> namesOfVavr = io.vavr.collection.List.of(
+                Option.of("a"),
+                Option.of("b"),
+                Option.of("c")
+        );
+
+        // with Vavr’s Option:
+        io.vavr.collection.List<String> newList3 = namesOfVavr
+                .map(o -> findName(o))
+                .flatMap(e -> e.toStream());
+
+        newList3.forEach(System.out::println);
+
+    }
+
+    private Option<String> findName(Option<String> o) {
+        if ("a".endsWith(o.get())) {
+            return Option.of(o.get().toUpperCase());
+        }
+        if ("b".endsWith(o.get())) {
+            return Option.of(o.get().toUpperCase());
+        }
+        return Option.none();
+    }
+
+    private Optional<String> findName(Optional<String> o) {
+        if ("a".endsWith(o.get())) {
+            return Optional.of(o.get().toUpperCase());
+        }
+        if ("b".endsWith(o.get())) {
+            return Optional.of(o.get().toUpperCase());
+        }
+        return Optional.ofNullable(null);
     }
 
     static class MyNullPointerException extends RuntimeException {
