@@ -31,6 +31,7 @@ public class OptionalVsOptionTest {
         assertThat(valOfOptinalOfNullableIsNotNull.isPresent()).isTrue();
         assertThat(valOfOptinalOfNullableIsNotNull.orElse("Other value")).isEqualTo("NotNullable");
 
+
         Option<String> valOfOptinOfIsNotNull = Option.of("NotNull");
         assertThat(valOfOptinOfIsNotNull.isDefined()).isTrue();
         assertThat(valOfOptinOfIsNotNull.isEmpty()).isFalse();
@@ -45,8 +46,14 @@ public class OptionalVsOptionTest {
         assertThat(valOfOptinOfIsNull).isInstanceOf(Option.None.class);
         assertThatThrownBy(() -> valOfOptinOfIsNull.getOrElseThrow(MyNullPointerException::new))
                 .isInstanceOf(MyNullPointerException.class); // Same like `Optional.orElseThrow`.
-        String afterValOfOptinOfIsNullPeek = valOfOptinOfIsNull.peek(System.out::println)
+
+        // You can use peek method but nothing to show because peek just check value is present before invoke consume functoin value.
+        String afterValOfOptinOfIsNullPeek = valOfOptinOfIsNull.peek(e -> System.out.println("This value is null."))
                 .getOrElse("Something change"); // Nothing to print out when use peek on `None`.
+
+        // You can use onEmpty to show value instead peek when value is None.
+        valOfOptinOfIsNull.onEmpty(() -> System.out.println("This is no value."));
+
         assertThat(afterValOfOptinOfIsNullPeek).isEqualTo("Something change");
         // Or you can throw exception.
         assertThatThrownBy(() -> valOfOptinOfIsNull.peek(System.out::println)
@@ -57,16 +64,37 @@ public class OptionalVsOptionTest {
         assertThat(valOfOptionSomeFromNotNull.isDefined()).isTrue();
         assertThat(valOfOptionSomeFromNotNull.isEmpty()).isFalse();
         assertThat(valOfOptionSomeFromNotNull).isInstanceOf(Option.Some.class);
+        // You can use peek to show value.
+        valOfOptionSomeFromNotNull.peek(System.out::println);
+
 
         Option<String> valOfOptionSomeFromNull = Option.some(null); // it should be contain Some(null) value.
         assertThat(valOfOptionSomeFromNull.isDefined()).isTrue();
         assertThat(valOfOptionSomeFromNull.isEmpty()).isFalse();
         assertThat(valOfOptionSomeFromNull).isInstanceOf(Option.Some.class);
+        // Peek can show `Some[null]` value.
+        valOfOptionSomeFromNull.peek(e -> System.out.println("This is `" + e + "` value."));
+        // Some[null] is not empty ( None ) value than this `onEmpty` nothing to show.
+        valOfOptionSomeFromNull.onEmpty(() -> System.out.println("This is `None` value."));
 
         Option<String> valOfOptionNone = Option.none(); // it should be None type.
         assertThat(valOfOptionNone.isDefined()).isFalse();
         assertThat(valOfOptionNone.isEmpty()).isTrue();
         assertThat(valOfOptionNone).isInstanceOf(Option.None.class);
+        // Nothing to show with `None` value.
+        valOfOptionNone.peek(e -> System.out.println("This is ` " + e + "` value."));
+        // Use `onEmpty` instead.
+        valOfOptionNone.onEmpty(() -> System.out.println("This is `None` value."));
+
+
+        // Difference between `orElse`
+        // return other value.
+        String a = (String) Optional.ofNullable(null).orElse("other value");
+        assertThat(a).isEqualTo("other value");
+        // return wrapped with container not like optional.
+        Option<Object> b = Option.of(null).orElse(Option.some("other value"));
+        assertThat(b.get()).isEqualTo("other value");
+
 
     }
 
