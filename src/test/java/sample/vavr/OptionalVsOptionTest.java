@@ -98,16 +98,22 @@ public class OptionalVsOptionTest {
         // return wrapped with container not like optional.
         Option<Object> b = Option.of(null).orElse(Option.some("other value"));
         assertThat(b.get()).isEqualTo("other value");
+        test_option_to_stream();
 
-        // transforming optional postal codes into addresses
-        // with JDK’s Optional:
+
+    }
+
+    @Test
+    public void test_option_to_stream() {
+        // transforming optional name
         List<Optional<String>> names = Arrays.asList(
-                Optional.of("a"),
-                Optional.of("b"),
-                Optional.of("c")
+                Optional.of("tom"),
+                Optional.of("john"),
+                Optional.of("emily")
         );
+
         List<String> newList = names.stream()
-                .map(o -> findName(o))
+                .map(o -> toUpper(o))
                 .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
                 .collect(toList());
 
@@ -115,7 +121,7 @@ public class OptionalVsOptionTest {
 
         // or
         List<String> newList2 = names.stream()
-                .map(o -> findName(o))
+                .map(o -> toUpper(o))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());
@@ -123,36 +129,29 @@ public class OptionalVsOptionTest {
         newList2.forEach(System.out::println);
 
         io.vavr.collection.List<Option<String>> namesOfVavr = io.vavr.collection.List.of(
-                Option.of("a"),
-                Option.of("b"),
-                Option.of("c")
+                Option.of("tom"),
+                Option.of("john"),
+                Option.of("emily")
         );
 
         // with Vavr’s Option:
         io.vavr.collection.List<String> newList3 = namesOfVavr
-                .map(o -> findName(o))
+                .map(o -> toUpper(o))
                 .flatMap(e -> e.toStream());
 
         newList3.forEach(System.out::println);
-
     }
 
-    private Option<String> findName(Option<String> o) {
-        if ("a".endsWith(o.get())) {
-            return Option.of(o.get().toUpperCase());
-        }
-        if ("b".endsWith(o.get())) {
-            return Option.of(o.get().toUpperCase());
+    private Option<String> toUpper(Option<String> o) {
+        if ("tom".equals(o.get()) || "john".equals(o.get())) {
+            return Option.of(String.format("Option value is %s", o.get().toUpperCase()));
         }
         return Option.none();
     }
 
-    private Optional<String> findName(Optional<String> o) {
-        if ("a".endsWith(o.get())) {
-            return Optional.of(o.get().toUpperCase());
-        }
-        if ("b".endsWith(o.get())) {
-            return Optional.of(o.get().toUpperCase());
+    private Optional<String> toUpper(Optional<String> o) {
+        if ("john".equals(o.get()) || "emily".equals(o.get())) {
+            return Optional.of(String.format("Optional value %s", o.get().toUpperCase()));
         }
         return Optional.ofNullable(null);
     }
