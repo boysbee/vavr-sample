@@ -12,6 +12,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SampleCurryingTest {
 
     @Test
+    public void testCurryingJava() {
+        Function<Integer, Function<Integer, String>> f = x -> y -> String.valueOf(x + y);
+        Function<Integer, String> f2 = f.apply(1);
+        String f3 = f2.apply(2);
+        assertThat(f3).isEqualTo("3");
+        // or
+        assertThat(f.apply(1).apply(2)).isEqualTo("3");
+
+    }
+
+    @Test
+    public void testMoreCurryingJava() {
+        Function<Integer, Function<Integer, Function<Integer, String>>> f = x -> y -> z -> String.valueOf(x + y + z);
+        Function<Integer, Function<Integer, String>> f2 = f.apply(1);
+        Function<Integer, String> f3 = f2.apply(2);
+        String f4 = f3.apply(3);
+        assertThat(f4).isEqualTo("6");
+        // or
+        assertThat(f.apply(1).apply(2).apply(3)).isEqualTo("6");
+
+    }
+
+
+    @Test
     public void testCurried() {
         Function3<Integer, Integer, Integer, String> f1 = (a, b, c) -> {
             return String.valueOf(a + b + c);
@@ -20,6 +44,10 @@ public class SampleCurryingTest {
         Function1<Integer, String> f3 = f2.apply(2);
         String f4 = f3.apply(3);
         assertThat(f4).isEqualTo("6");
+
+        // or
+
+        assertThat(f1.apply(1).apply(2).apply(3)).isEqualTo("6");
     }
 
     @Test
@@ -32,6 +60,7 @@ public class SampleCurryingTest {
         Function1<Function<Integer, String>, String> f3 = f2.apply(2);
         String actual = f3.apply(f4);
         assertThat(actual).isEqualTo("3");
+
     }
 
     @Test
@@ -45,6 +74,10 @@ public class SampleCurryingTest {
         Function3<Integer, Integer, Integer, String> f = (a, b, c) -> String.valueOf(a + b + c);
         String actual = f4.apply(f);
         assertThat(actual).isEqualTo("6");
+
+        // or
+
+        assertThat(f1.apply(1).apply(2).apply(3).apply(f)).isEqualTo("6");
     }
 
 }
