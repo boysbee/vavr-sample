@@ -12,7 +12,15 @@ public class SampleValidationTest {
     public void testValidationInValid() {
         val v = SampleValidation.validateName("v");
         assertThat(v.isInvalid()).isTrue();
-        assertThat(v.get()).isEqualTo("v");
+        // get error value when invalid
+        assertThat(v.getError()).isEqualTo("Error");
+    }
+
+    @Test
+    public void testValidationInValidMapError() {
+        val v = SampleValidation.validateName("v").mapError(String::toUpperCase);
+
+        assertThat(v.getError()).isEqualTo("ERROR");
     }
 
     @Test
@@ -59,6 +67,58 @@ public class SampleValidationTest {
         assertThat(v.isValid()).isTrue();
     }
 
+    @Test
+    public void testCombineWithValidationIsValid() {
 
+        Validation v = Validation.combine(
+                SampleValidation.validateName("test"),
+                SampleValidation.validateAddress("test"),
+                SampleValidation.validateEmail("myemail@email.com")
+        ).ap((a, b, c) -> a + b + c);
+
+        assertThat(v.isValid()).isTrue();
+
+
+    }
+
+    @Test
+    public void testCombineValidationIsInvalid() {
+        Validation v = Validation.combine(
+                SampleValidation.validateName("something"),
+                SampleValidation.validateAddress("_"),
+                SampleValidation.validateEmail("email.com")
+        ).ap((a, b, c) -> a + b + c)
+                .mapError(e -> e.foldLeft("", (a, b) -> {
+                    return a + " " + b;
+                }));
+
+        assertThat(v.isInvalid()).isTrue();
+        assertThat(v.getError()).isEqualTo(" Error Wrong Address Wrong email");
+
+        String message = (String) v.fold(invalid -> {
+            return invalid;
+        }, valid -> {
+            return valid;
+        });
+        assertThat(message).isEqualTo(" Error Wrong Address Wrong email");
+    }
+
+    @Test
+    public void testCombineValidationIsInValidWithFlatMap() {
+
+        assertThat(SampleValidation.validateName("something")
+                .flatMap(a -> SampleValidation.validateAddress("_")
+                        .flatMap(b -> SampleValidation.validateEmail("email.com")))
+                .isInvalid()).isTrue();
+    }
+
+    @Test
+    public void testCombineValidationIsValidWithFlatMap() {
+
+        assertThat(SampleValidation.validateName("test")
+                .flatMap(a -> SampleValidation.validateAddress("test")
+                        .flatMap(b -> SampleValidation.validateEmail("mymail@email.com")))
+                .isValid()).isTrue();
+    }
 
 }
